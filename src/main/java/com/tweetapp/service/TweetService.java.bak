@@ -43,7 +43,9 @@ public class TweetService {
 		Optional<User> findByEmailIdName = userRepository.findByFirstName(userName);
 		long count = tweetRepository.count();
 		//log.info("total tweets " + count);
-		
+		if (!findByEmailIdName.isPresent())
+			throw new TweetAppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST,
+					TweetConstant.USER_NAME_NOT_PRESENT);
 		tweetRequest.setTweetId((int) count + 1);
 		Tweet tweet = new Tweet(tweetRequest.getTweetId(), tweetRequest.getUserName(), tweetRequest.getTweet(),
 				new Date(System.currentTimeMillis()), null, null);
